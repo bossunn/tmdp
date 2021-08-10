@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import moviesApi from '../apis/moviesApi';
 import logo from '../assets/1979.jpg'
 
-function Navbar({ onChange }) {
+function Navbar({ onChange, filter }) {
   const [genre, setGenre] = useState([]);
   
   useEffect(() => {
@@ -17,6 +17,7 @@ function Navbar({ onChange }) {
   },[]);
 
   const handleFilterGenre = (values) => {
+
     if (onChange) {
       onChange(values.id);
     }
@@ -44,7 +45,7 @@ function Navbar({ onChange }) {
                         <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                             {genre.map(x => (
                               <li key={x.id} onClick={() => handleFilterGenre(x)}>
-                                <a className="dropdown-item" href={{}}>{x.name}</a>
+                                <span className="dropdown-item" href={x.id}>{x.name}</span>
                               </li>
                             ))}
                         </ul>

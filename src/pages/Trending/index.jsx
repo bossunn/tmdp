@@ -1,13 +1,33 @@
+import { makeStyles } from "@material-ui/core/styles";
+import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import moviesApi from "../../apis/moviesApi";
 import Navbar from "../../components/Navbar";
 import "./Trending.css";
 
+const useStyle = makeStyles({
+  pagination: {
+    color: "white",
+  },
+});
+
 const Trending = () => {
+  const classes = useStyle();
   const [trendingMovie, setTrendingMovie] = useState([]);
-  const [filter, setFilter] = useState({
-    with_genre: 0,
+  const [loading, setLoading] = useState(false);
+
+  const [paginations, setPaginations] = useState({
+    count: 1,
+    pages: 1,
+    limit: 9,
   });
+
+  const [filter, setFilter] = useState({
+    page: 1,
+    with_genres: 28,
+  });
+
+  // const history = useHistory();
 
   const baseUrlImg = "https://image.tmdb.org/t/p/w500";
 
@@ -15,28 +35,47 @@ const Trending = () => {
     (async () => {
       try {
         const data = await moviesApi.discover(filter);
+        //console.log(data);
         setTrendingMovie(data.results);
+        setPaginations({
+          pages: data.page,
+          count: data.total_pages,
+          limit: data.total_results,
+        });
       } catch (error) {
         console.log("Lỗi fetch", error);
       }
     })();
   }, [filter]);
 
+  // useEffect(() => {
+  //   history.push({
+  //     pathname: history.location.pathname,
+  //     search: queryString.stringify(filter),
+  //   });
+  // }, [history, filter]);
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
+
   function getYear(x) {
-    const year = x.release_date.split("-");
+    const year = x?.release_date?.split("-") || "";
     return <li>{year[0]}</li>;
   }
 
   const handleFilterChange = (newFilters) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      with_genre: newFilters,
-    }));
+    setFilter({ ...filter, with_genres: newFilters });
+  };
+
+  //Xử lí pagination
+  const handlePagination = (value) => {
+    setFilter({ ...filter, page: value });
   };
 
   return (
     <div className="row">
-      <Navbar onChange={handleFilterChange} />
+      <Navbar onChange={handleFilterChange} filter={filter} />
       <div className="col-12">
         <div className="row row--grid">
           {trendingMovie.map((x) => (
@@ -65,6 +104,13 @@ const Trending = () => {
           ))}
         </div>
       </div>
+      <Pagination
+        className={classes.pagination}
+        count={paginations.count}
+        color="primary"
+        page={paginations.pages}
+        onChange={handlePagination}
+      />
     </div>
   );
 };

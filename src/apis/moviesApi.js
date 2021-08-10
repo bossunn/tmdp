@@ -12,7 +12,8 @@ const moviesApi = {
     },
 
     discover(params) {
-        const url = `discover/movie?api_key=ef00cf5a1cc0ab1356dff9793ace7634`
+        const url = `/discover/movie?api_key=ef00cf5a1cc0ab1356dff9793ace7634&language=en-US`;
+        console.log(url)
         return axiosClient.get(url, {params: params});
     }
 }
