@@ -1,12 +1,10 @@
 import './App.css';
-import Trending from './pages/Trending';
+import Home from './pages/Home';
 
 function App() {
   return (
-    <div className="App container">
-      React
-      
-      <Trending></Trending>
+    <div className="App">      
+      <Home></Home>
     </div>
   );
 }
