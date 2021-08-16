@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import moviesApi from '../apis/moviesApi';
-import logo from '../assets/1979.jpg'
+import logo from '../assets/1979.jpg';
+import FilterByGenre from './FilterByGenre';
+import FilterBySearch from './FilterBySearch';
 
 function Navbar({ onChange, filter }) {
   const [genre, setGenre] = useState([]);
-  
+  // const [value, setValue] = useState({
+  //   id: 28,
+  //   query: "",
+  // })
+
+
+  // const filters = useRef({
+  //   id: 18,
+  //   searchKey: ""
+  // })
+
   useEffect(() => {
     (async () => {
       try {
@@ -16,12 +28,26 @@ function Navbar({ onChange, filter }) {
     })();
   },[]);
 
-  const handleFilterGenre = (values) => {
+   const handleByGenre = (value) => {
+     if(onChange) {
+       onChange(value)
+     }
+   }
 
-    if (onChange) {
-      onChange(values.id);
-    }
-  }
+   const handleBySearch = (value) => {
+     if(onChange) {
+       onChange(value)
+     }
+   }
+
+    // const handleChangeSearch = (e) => {
+    //   if(onChange) {
+    //     setValue({...value, query: e.target.value});
+    //     console.log(e.target.value);
+    //     onChange(value);
+    //     // setQuery(e.target.value);
+    //   }
+    // }
 
     return (
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -42,13 +68,7 @@ function Navbar({ onChange, filter }) {
                         <a className="nav-link dropdown-toggle" href={{}} id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{color: "white"}}>
                           Thể loại
                         </a>
-                        <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                            {genre.map(x => (
-                              <li key={x.id} onClick={() => handleFilterGenre(x)}>
-                                <span className="dropdown-item" href={x.id}>{x.name}</span>
-                              </li>
-                            ))}
-                        </ul>
+                        <FilterByGenre genre={genre} onChange={handleByGenre}/>
                       </li>
                       <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href={{}} id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{color: "white"}}>
@@ -64,10 +84,7 @@ function Navbar({ onChange, filter }) {
                       </li>
                   </ul>
                 </div>
-                  <form className="d-flex">
-                      <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                      <button className="btn btn-outline-success" type="submit">Search</button>
-                  </form>           
+                <FilterBySearch onChange={handleBySearch}/>          
           </div>
       </nav>
 );

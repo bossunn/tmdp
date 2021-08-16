@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Slider from "react-slick";
 import moviesApi from "../../apis/moviesApi";
 
 function Paginations() {
   const [movie, setMovie] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
 
   const baseUrlImg = "https://image.tmdb.org/t/p/w500";
 
@@ -45,13 +49,22 @@ function Paginations() {
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true);
         const data = await moviesApi.getTrending();
         setMovie(data.results);
       } catch (error) {
         console.log("Lỗi Fetch", error);
       }
+      setLoading(false);
     })();
-  });
+  }, []);
+
+  if (loading) {
+  }
+
+  const handleClick = (id) => {
+    history.push(`/${id}`);
+  };
 
   return (
     <div>
@@ -62,9 +75,9 @@ function Paginations() {
             <Slider {...settings}>
               {movie.map((x) => (
                 <div
-                  style={{ margin: "12px" }}
-                  className="col-6 col-sm-4 col-lg-3 col-xl-2 card-padding"
+                  className="col-6 col-sm-4 col-lg-3 col-xl-2 card_padding"
                   key={x.id}
+                  onClick={() => handleClick(x.id)}
                 >
                   <div className="card card_box">
                     <img

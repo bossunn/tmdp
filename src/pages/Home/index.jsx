@@ -2,10 +2,12 @@ import { Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import moviesApi from "../../apis/moviesApi";
 import Navbar from "../../components/Navbar";
 import "./index.css";
 import Paginations from "./Pagination";
+import queryString from "query-string";
 
 const useStyle = makeStyles({
   pagination: {
@@ -28,10 +30,16 @@ const Home = () => {
 
   const [filter, setFilter] = useState({
     page: 1,
-    with_genres: 28,
+    // with_genres: 28,
   });
 
-  // const history = useHistory();
+  const history = useHistory();
+  console.log("History nè", history);
+
+  const location = useLocation();
+  console.log("Location nè", location);
+
+  //const queryParams = queryString.parse(location.search);
 
   const baseUrlImg = "https://image.tmdb.org/t/p/w500";
 
@@ -53,12 +61,13 @@ const Home = () => {
     setLoading(false);
   }, [filter]);
 
-  // useEffect(() => {
-  //   history.push({
-  //     pathname: history.location.pathname,
-  //     search: queryString.stringify(filter),
-  //   });
-  // }, [history, filter]);
+  //Để xuất hiện những filter trên thanh URL
+  useEffect(() => {
+    history.push({
+      //pathname: history.location.pathname,
+      search: queryString.stringify(filter),
+    });
+  }, [history, filter]);
 
   if (loading) {
     return <div>Loading</div>;
@@ -70,12 +79,20 @@ const Home = () => {
   }
 
   const handleFilterChange = (newFilters) => {
-    setFilter({ ...filter, with_genres: newFilters });
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      ...newFilters,
+    }));
   };
 
   //Xử lí pagination
   const handlePagination = (event, pages) => {
     setFilter({ ...filter, page: pages });
+  };
+
+  //Khi an vao 1 item se qua trang chi tiet
+  const handleClick = (id) => {
+    history.push(`/${id}`);
   };
 
   return (
@@ -87,7 +104,11 @@ const Home = () => {
             <div className="col-12">
               <div className="row row--grid">
                 {trendingMovie.map((x) => (
-                  <div className="col-6 col-sm-4 col-lg-3 col-xl-2" key={x.id}>
+                  <div
+                    className="col-6 col-sm-4 col-lg-3 col-xl-2"
+                    key={x.id}
+                    onClick={() => handleClick(x.id)}
+                  >
                     <div className="card card_box">
                       <img
                         className="card_img"
