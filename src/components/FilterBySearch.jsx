@@ -7,14 +7,15 @@ function FilterBySearch({ onChange }) {
     setQuery(e.target.value);
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    // e.preventDefault();
     if (onChange) {
-      onChange({ year: query });
+      onChange({ query: query });
     }
   };
 
   return (
-    <form className="d-flex">
+    <div className="d-flex">
       <input
         className="form-control me-2"
         type="search"
@@ -24,10 +25,14 @@ function FilterBySearch({ onChange }) {
         value={query}
         onChange={handleChange}
       />
-      <button className="btn" type="submit" onClick={onSubmit}>
+      <button
+        className="btn btn-outline-success"
+        // type="submit"
+        onClick={onSubmit}
+      >
         Search
       </button>
-    </form>
+    </div>
   );
 }
 

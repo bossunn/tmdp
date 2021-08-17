@@ -6,16 +6,7 @@ import useMovieDetail from "./hooks/useMovieDetail";
 import "./index.css";
 import MainInfo from "./MainInfo";
 
-// const useStyles = makeStyles(() => ({
-//   root: {
-//     paddingTop: "80px",
-//     position: "relative",
-//   },
-// }));
-
 function DetailPage(props) {
-  //const classes = useStyles();
-
   const {
     params: { movieID },
   } = useRouteMatch();
@@ -35,7 +26,6 @@ function DetailPage(props) {
 
   return (
     <div style={{ paddingTop: "80px", position: "relative" }}>
-      {/* <Navbar style={{ backgroundColor: "black" }} /> */}
       <Background movie={movie} />
       <MainInfo movie={movie} />
     </div>

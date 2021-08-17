@@ -6,16 +6,6 @@ import FilterBySearch from './FilterBySearch';
 
 function Navbar({ onChange, filter }) {
   const [genre, setGenre] = useState([]);
-  // const [value, setValue] = useState({
-  //   id: 28,
-  //   query: "",
-  // })
-
-
-  // const filters = useRef({
-  //   id: 18,
-  //   searchKey: ""
-  // })
 
   useEffect(() => {
     (async () => {
@@ -40,14 +30,6 @@ function Navbar({ onChange, filter }) {
      }
    }
 
-    // const handleChangeSearch = (e) => {
-    //   if(onChange) {
-    //     setValue({...value, query: e.target.value});
-    //     console.log(e.target.value);
-    //     onChange(value);
-    //     // setQuery(e.target.value);
-    //   }
-    // }
 
     return (
       <nav className="navbar navbar-expand-lg navbar-light">
