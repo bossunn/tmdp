@@ -22,6 +22,10 @@ const Home = () => {
   const [trendingMovie, setTrendingMovie] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [keyword, setKeyword] = useState({
+    query: "",
+  });
+
   const [paginations, setPaginations] = useState({
     count: 1,
     pages: 1,
@@ -61,6 +65,17 @@ const Home = () => {
     setLoading(false);
   }, [filter]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await moviesApi.getMovieSearch(keyword);
+        setTrendingMovie(data.results);
+      } catch (error) {
+        console.log("Lỗi Fetch Search", error);
+      }
+    })();
+  }, [keyword]);
+
   //Để xuất hiện những filter trên thanh URL
   useEffect(() => {
     history.push({
@@ -79,8 +94,18 @@ const Home = () => {
   }
 
   const handleFilterChange = (newFilters) => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
+    // if (Array.isArray(newFilters)) {
+    //   setTrendingMovie(newFilters);
+    // } else {
+    //   setFilter((prev) => ({
+    //     ...prev,
+    //     ...newFilters,
+    //   }));
+    // }
+    setKeyword({ query: newFilters.query });
+
+    setFilter((prev) => ({
+      ...prev,
       ...newFilters,
     }));
   };

@@ -44,7 +44,7 @@ function Navbar({ onChange, filter }) {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul className="navbar-nav me-auto mb-2 mb-lg-0" >
                       <li className="nav-item" >
-                          <a className="nav-link active" aria-current="page" href="https://nguyenhung.net" style={{color: "white"}}>Home</a>
+                          <a className="nav-link active" aria-current="page" href="http://localhost:3000/" style={{color: "white"}}>Home</a>
                       </li>
                       <li className="nav-item drop-down">
                         <a className="nav-link dropdown-toggle" href={{}} id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{color: "white"}}>
