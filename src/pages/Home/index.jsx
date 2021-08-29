@@ -22,9 +22,9 @@ const Home = () => {
   const [trendingMovie, setTrendingMovie] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [keyword, setKeyword] = useState({
-    query: "",
-  });
+  // const [keyword, setKeyword] = useState({
+  //   query: "",
+  // });
 
   const [paginations, setPaginations] = useState({
     count: 1,
@@ -65,16 +65,16 @@ const Home = () => {
     setLoading(false);
   }, [filter]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await moviesApi.getMovieSearch(keyword);
-        setTrendingMovie(data.results);
-      } catch (error) {
-        console.log("Lỗi Fetch Search", error);
-      }
-    })();
-  }, [keyword]);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const data = await moviesApi.getMovieSearch(keyword);
+  //       setTrendingMovie(data.results);
+  //     } catch (error) {
+  //       console.log("Lỗi Fetch Search", error);
+  //     }
+  //   })();
+  // }, [keyword]);
 
   //Để xuất hiện những filter trên thanh URL
   useEffect(() => {
@@ -102,7 +102,7 @@ const Home = () => {
     //     ...newFilters,
     //   }));
     // }
-    setKeyword({ query: newFilters.query });
+    // setKeyword({ query: newFilters.query });
 
     setFilter((prev) => ({
       ...prev,
@@ -137,7 +137,11 @@ const Home = () => {
                     <div className="card card_box">
                       <img
                         className="card_img"
-                        src={`${baseUrlImg}${x.poster_path}`}
+                        src={
+                          x.poster_path
+                            ? `${baseUrlImg}${x.poster_path}`
+                            : "https://via.placeholder.com/90x130"
+                        }
                         alt={x.title}
                       />
                       <button className="card_add" type="button">

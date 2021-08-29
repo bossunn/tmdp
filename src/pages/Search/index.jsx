@@ -1,13 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import moviesApi from "../../apis/moviesApi";
+import { makeStyles } from "@material-ui/core/styles";
 import Navbar from "../../components/Navbar";
+import Pagination from "@material-ui/lab/Pagination";
+import { Box } from "@material-ui/core";
+
+const useStyle = makeStyles({
+  pagination: {
+    display: "flex",
+    justifyContent: "center",
+    background: "white",
+  },
+});
 
 function Search(props) {
-  const [queryFilter, setQueryFilter] = useState({});
+  const [queryFilter, setQueryFilter] = useState({
+    page: 1,
+  });
   const [movieSearch, setMovieSearch] = useState([]);
 
+  const [pagination, setPagination] = useState({
+    count: 1,
+    pages: 1,
+  });
+
   const history = useHistory();
+
+  const classes = useStyle();
 
   const baseUrlImg = "https://image.tmdb.org/t/p/w500";
 
@@ -22,6 +42,10 @@ function Search(props) {
         const data = await moviesApi.getMovieSearch(queryFilter);
         console.log(data);
         setMovieSearch(data.results);
+        setPagination({
+          count: data.total_pages,
+          pages: data.page,
+        });
       } catch (error) {
         console.log("lỗi fetch", error);
       }
@@ -39,8 +63,15 @@ function Search(props) {
     history.push(`/${id}`);
   };
 
+  const handlePagination = (event, pages) => {
+    setQueryFilter((prev) => ({
+      ...prev,
+      page: pages,
+    }));
+  };
+
   return (
-    <div>
+    <div className="bg-index">
       <Navbar onChange={handleSearch} />
       {movieSearch.length > 0 ? (
         <div className="col-12">
@@ -54,7 +85,11 @@ function Search(props) {
                 <div className="card card_box">
                   <img
                     className="card_img"
-                    src={`${baseUrlImg}${x.poster_path}`}
+                    src={
+                      x.poster_path
+                        ? `${baseUrlImg}${x.poster_path}`
+                        : "https://via.placeholder.com/90x130"
+                    }
                     alt={x.title}
                   />
                   <button className="card_add" type="button">
@@ -74,9 +109,23 @@ function Search(props) {
               </div>
             ))}
           </div>
+          <Box className={classes.pagination}>
+            <Pagination
+              count={pagination.count}
+              page={pagination.page}
+              onChange={handlePagination}
+              color="primary"
+            />
+          </Box>
         </div>
       ) : (
-        <div>waiting Search</div>
+        <div>
+          <video
+            type="video/webm"
+            autoplay
+            src="https://video-hkt1-1.xx.fbcdn.net/v/t42.27313-2/10000000_585709165804733_7823318472114980789_n.mp4?_nc_cat=107&vs=1e9ce4a6240ed91f&_nc_vs=HBksFQAYJEdJQ1dtQUM5LU1RS3N4UUNBTFZIS2xfekFwSnNickZxQUFBRhUAAsgBABUAGCRHSUNXbUFDeHU2RTRoeUFEQUF6VnliSmg2MlE3YnFkQkFBQUYVAgLIAQBLBogScHJvZ3Jlc3NpdmVfcmVjaXBlATEgbWVhc3VyZV9vcmlnaW5hbF9yZXNvbHV0aW9uX3NzaW0AKGNvbXB1dGVfc3NpbV9vbmx5X2F0X29yaWdpbmFsX3Jlc29sdXRpb24AEWRpc2FibGVfcG9zdF9wdnFzAA1zdWJzYW1wbGVfZnBzABB2bWFmX2VuYWJsZV9uc3ViABUAJQAcAAAmzpbYmtSwcBUCKAJDMxgLdnRzX3ByZXZpZXccF0Cz7wDEm6XjGDJkYXNoX2dlbjNiYXNpY19wYXNzdGhyb3VnaGFsaWduZWRfaHEyX2ZyYWdfMl92aWRlbxIAGBh2aWRlb3MudnRzLmNhbGxiYWNrLnByb2Q4ElZJREVPX1ZJRVdfUkVRVUVTVBsIiBVvZW1fdGFyZ2V0X2VuY29kZV90YWcGb2VwX2hkE29lbV9yZXF1ZXN0X3RpbWVfbXMNMTYyOTc3OTYyNTc2MQxvZW1fY2ZnX3J1bGUHdW5tdXRlZBNvZW1fcm9pX3JlYWNoX2NvdW50ATAMb2VtX3ZpZGVvX2lkDzI0NzEyNjU1Mzk1MDQ1ORJvZW1fdmlkZW9fYXNzZXRfaWQPMjQ3MTI2NTQzOTUwNDYwFW9lbV92aWRlb19yZXNvdXJjZV9pZA8yNDcxMjY1NDA2MTcxMjccb2VtX3NvdXJjZV92aWRlb19lbmNvZGluZ19pZA8yMDI1ODg1OTUyNTUzNzklAhwAJcQBGweIAXMDMjg3AmNkCjIwMjEtMDgtMjIDcmNiATADYXBwBVZpZGVvAmN0GUNPTlRBSU5FRF9QT1NUX0FUVEFDSE1FTlQTb3JpZ2luYWxfZHVyYXRpb25fcwc1MTAyLjkxAnRzD29lcF9wcm9ncmVzc2l2ZQA%3D&ccb=1-5&_nc_sid=41a7d5&efg=eyJ2ZW5jb2RlX3RhZyI6Im9lcF9oZCJ9&_nc_ohc=3SDFC1a2bFMAX-sOF-P&_nc_oc=AQn29qJpvgseOa5131mafrIJEcqy_pJ7QG9dh4wvdNLw16VAT3wLCFKKJtafe8SjtPVNVRSrSbwzGsqRsG3oyuGj&_nc_ht=video-hkt1-1.xx&edm=APRAPSkEAAAA&oh=20ddf0c19e520c0da4b2e1ded73b7c5b&oe=61265FDA&_nc_rid=bce630f559a3404&_nc_vts_prog=1&_nc_vts_internal=1"
+          ></video>
+        </div>
       )}
     </div>
   );

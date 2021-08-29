@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 function FilterBySearch({ onChange }) {
   const [query, setQuery] = useState("");
   // const [movieSearch, setMovieSearch] = useState([]);
+
+  const history = useHistory();
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -11,8 +14,9 @@ function FilterBySearch({ onChange }) {
   const onSubmit = (e) => {
     e.preventDefault();
     if (onChange) {
-      onChange({ query: query });
+      onChange({ query: query, page: 1 });
     }
+    history.push("/search/search");
   };
 
   // const onSubmit = (e) => {

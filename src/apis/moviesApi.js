@@ -16,6 +16,16 @@ const moviesApi = {
         return axiosClient.get(url, {params: params})
     },
 
+    getTvPopular(params) {
+        const url = `/tv/popular?api_key=ef00cf5a1cc0ab1356dff9793ace7634&language=en-US`;
+        return axiosClient.get(url, {params: params});
+    },
+
+    getMoviePopular(params) {
+        const url = `/movie/top_rated?api_key=ef00cf5a1cc0ab1356dff9793ace7634&language=en-US`;
+        return axiosClient.get(url, {params: params});
+    },
+
     discover(params) {
         const url = `/discover/movie?api_key=ef00cf5a1cc0ab1356dff9793ace7634&language=en-US`;
         console.log(url)
